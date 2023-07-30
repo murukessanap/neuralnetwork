@@ -90,23 +90,30 @@ class ANN:
     def train(self, inputs, targets, epochs=1, lr=0.1):
         for i in range(epochs):
             print(f'Epoch {i+1}')
+            mse = 0.0
             for j in range(len(inputs)):
                 outputs = self.feedforward(inputs[j])
-                print("##########Feedforward##########")
-                self.display()
+                # print("##########Feedforward##########")
+                # self.display()
                 errors = [outputs[k]-targets[j][k] for k in range(len(outputs))]
-                print("##########Error##########")
-                print(errors)
+                mse += sum([i**2 for i in errors])/len(errors)
+        
+                # print("##########Error##########")
+                # print(errors)
                 self.backprop(errors)
-                print("##########Backprop##########")
-                self.display()
+                # print("##########Backprop##########")
+                # self.display()
                 self.update(lr)
-                print("##########Update##########")
-                self.display()
+                # print("##########Update##########")
+                # self.display()
                 self.zero_grad()
-                print("##########Zero Grad##########")
-                self.display()
-                print()
+                # print("##########Zero Grad##########")
+                # self.display()
+                # print()
+            print(f"##########MSE: {mse}##########")
+            if mse < 0.0001:
+                print("##########Converged##########")
+                return
 
 def sigmoid(x):
     return 1/(1+math.exp(-x))
@@ -133,7 +140,7 @@ print(randomBiases(arch))
 nn=ANN(arch,[None,sigmoid,sigmoid],[None,dsigmoid,dsigmoid],randomWeights(arch),randomBiases(arch))
 nn.display()
 # nn.train([[0.1,0.5]],[[0.8]],epochs=1,lr=0.1)
-nn.train([[0.0,0.0],[0.0,1.0],[1.0,0.0],[1.0,1.0]],[[0.0],[1.0],[1.0],[0.0]],epochs=10000,lr=0.1)
+nn.train([[0.0,0.0],[0.0,1.0],[1.0,0.0],[1.0,1.0]],[[0.0],[1.0],[1.0],[0.0]],epochs=1000000,lr=0.1)
 # nn.train([[1.0,1.0]],[[0.0]],epochs=1,lr=0.1)
 # nn.train([[1.0,1.0]],[[1.0]],epochs=1,lr=1)
 
